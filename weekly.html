@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026年上半年总结报告看板 | 惠买健康超市运营3部</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f0f2f5; color: #333; }
+
+.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: #fff; padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 26px; font-weight: 700; }
+.header .sub { font-size: 14px; opacity: 0.8; margin-top: 6px; }
+.header .badge { background: rgba(255,255,255,0.12); padding: 10px 20px; border-radius: 24px; font-size: 13px; }
+
+.container { max-width: 1440px; margin: 0 auto; padding: 24px; }
+
+.section-title { font-size: 18px; font-weight: 700; color: #1a1a2e; margin: 32px 0 16px; padding-left: 14px; border-left: 4px solid #1890ff; display: flex; align-items: center; gap: 8px; }
+.section-title:first-of-type { margin-top: 0; }
+
+/* KPI */
+.kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 24px; }
+.kpi-card { background: #fff; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; overflow: hidden; transition: transform 0.2s; }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.kpi-card .label { font-size: 13px; color: #888; margin-bottom: 6px; }
+.kpi-card .value { font-size: 28px; font-weight: 700; }
+.kpi-card .sub-text { font-size: 12px; color: #999; margin-top: 4px; }
+.kpi-card .icon { position: absolute; right: 16px; top: 16px; font-size: 32px; opacity: 0.12; }
+.kpi-card.warn { border-left: 4px solid #ff4d4f; }
+.kpi-card.warn .value { color: #ff4d4f; }
+.kpi-card.danger { border-left: 4px solid #ff4d4f; background: linear-gradient(135deg, #fff 0%, #fff1f0 100%); }
+.kpi-card.good { border-left: 4px solid #52c41a; }
+.kpi-card.info { border-left: 4px solid #1890ff; }
+.kpi-card.purple { border-left: 4px solid #722ed1; }
+
+/* Grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px; }
+.grid-2-centered { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; max-width: 800px; margin-left: auto; margin-right: auto; }
+.grid-full { margin-bottom: 16px; }
+
+/* Panels */
+.panel { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+.panel-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+.panel-body { padding: 16px 20px; }
+.chart { width: 100%; height: 360px; }
+.chart-sm { width: 100%; height: 300px; }
+.chart-lg { width: 100%; height: 440px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #fafafa; padding: 10px 12px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #e8e8e8; white-space: nowrap; }
+td { padding: 9px 12px; border-bottom: 1px solid #f5f5f5; }
+tr:hover td { background: #fafafa; }
+.num { text-align: right; font-family: 'SF Mono', 'Menlo', monospace; }
+
+/* Tags */
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.tag-red { background: #fff1f0; color: #cf1322; }
+.tag-green { background: #f6ffed; color: #389e0d; }
+.tag-orange { background: #fff7e6; color: #d46b08; }
+.tag-blue { background: #e6f7ff; color: #096dd9; }
+
+/* Executive Summary */
+.exec-summary { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+.exec-card { background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: center; }
+.exec-card .exec-icon { font-size: 24px; margin-bottom: 4px; }
+.exec-card .exec-value { font-size: 20px; font-weight: 700; }
+.exec-card .exec-label { font-size: 11px; color: #888; margin-top: 2px; }
+.exec-card .exec-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; margin-top: 4px; }
+.exec-card.red .exec-badge { background: #fff1f0; color: #cf1322; }
+.exec-card.green .exec-badge { background: #f6ffed; color: #389e0d; }
+.exec-card.yellow .exec-badge { background: #fff7e6; color: #d46b08; }
+
+/* Insight Boxes */
+.insight-box { border-radius: 8px; padding: 16px 20px; margin-bottom: 12px; }
+.insight-box.red { background: linear-gradient(135deg, #fff1f0, #fff2f0); border: 1px solid #ffa39e; }
+.insight-box.green { background: linear-gradient(135deg, #f6ffed, #fcffe6); border: 1px solid #b7eb8f; }
+.insight-box.blue { background: linear-gradient(135deg, #e6f7ff, #f0f5ff); border: 1px solid #91d5ff; }
+.insight-box.yellow { background: linear-gradient(135deg, #fff7e6, #fffbe6); border: 1px solid #ffe58f; }
+.insight-box .insight-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.insight-box .insight-text { font-size: 13px; color: #555; line-height: 1.6; }
+
+/* Project Cards */
+.project-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 20px; border-top: 4px solid #1890ff; transition: transform 0.2s; }
+.project-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.project-card.h2 { border-top-color: #52c41a; }
+.project-card .proj-num { font-size: 32px; font-weight: 800; color: #e8e8e8; float: right; line-height: 1; }
+.project-card .proj-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #1a1a2e; }
+.project-card .proj-meta { font-size: 12px; color: #888; margin-bottom: 10px; }
+.project-card .proj-desc { font-size: 13px; color: #555; line-height: 1.7; }
+.project-card .proj-result { margin-top: 10px; padding: 10px 12px; background: #f6ffed; border-radius: 6px; font-size: 13px; color: #389e0d; font-weight: 600; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: #e8e8e8; }
+.timeline-item { position: relative; margin-bottom: 20px; padding-left: 24px; }
+.timeline-item::before { content: ''; position: absolute; left: -20px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: #1890ff; border: 2px solid #fff; box-shadow: 0 0 0 2px #1890ff; }
+.timeline-item.q4::before { background: #722ed1; box-shadow: 0 0 0 2px #722ed1; }
+.timeline-item .tl-date { font-size: 12px; color: #888; font-weight: 600; }
+.timeline-item .tl-title { font-size: 14px; font-weight: 600; margin: 2px 0; }
+.timeline-item .tl-desc { font-size: 12px; color: #666; }
+/* Strategy Flow */
+.strategy-flow { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px; flex-wrap: wrap; }
+.flow-box { padding: 18px 24px; border-radius: 12px; text-align: center; min-width: 120px; }
+.flow-box.h1 { background: #e6f7ff; border: 2px solid #91d5ff; }
+.flow-box.h2 { background: #f6ffed; border: 2px solid #b7eb8f; }
+.flow-box .flow-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+.flow-box .flow-title { font-size: 16px; font-weight: 700; }
+.flow-arrow { font-size: 24px; color: #bbb; }
+
+/* Tab Navigation */
+.tab-nav { display: flex; gap: 6px; background: #fff; border-radius: 12px; padding: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+.tab-btn { flex: 1; min-width: 90px; padding: 12px 18px; border: none; background: transparent; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; color: #888; transition: all 0.25s; white-space: nowrap; text-align: center; }
+.tab-btn:hover { background: #f0f5ff; color: #1890ff; }
+.tab-btn.active { background: #1890ff; color: #fff; box-shadow: 0 2px 8px rgba(24,144,255,0.3); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 1100px) {
+  .kpi-grid, .exec-summary { grid-template-columns: repeat(3, 1fr); }
+  .grid-2, .grid-3, .grid-2-1, .grid-1-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .kpi-grid, .exec-summary { grid-template-columns: repeat(2, 1fr); }
+  .header { flex-direction: column; text-align: center; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== HEADER ====== -->
+<div class="header">
+  <div>
+    <h1>📊 2026年上半年 · 总结报告看板</h1>
+    <div class="sub">惠买健康超市运营3部 | 数据区间：2026.01.01 - 2026.06.30</div>
+  </div>
+  <div class="badge">🕐 优化版 · 2026-07-02</div>
+</div>
+
+<div class="container">
+
+<!-- ====== 经营概况 ====== -->
+<div class="section-title">📌 经营概况</div>
+<div class="exec-summary">
+  <div class="exec-card yellow">
+    <div class="exec-icon">💰</div>
+    <div class="exec-value">3,206万</div>
+    <div class="exec-label">H1 GMV · 毛利率33.9%</div>
+    <div class="exec-badge">规模尚可</div>
+  </div>
+  <div class="exec-card red">
+    <div class="exec-icon">🏪</div>
+    <div class="exec-value">38.8%</div>
+    <div class="exec-label">闭店率 · 78家已关</div>
+    <div class="exec-badge">模式警报</div>
+  </div>
+  <div class="exec-card red">
+    <div class="exec-icon">📉</div>
+    <div class="exec-value">55.5%</div>
+    <div class="exec-label">门店日均<1,000元</div>
+    <div class="exec-badge">96家赔钱</div>
+  </div>
+  <div class="exec-card red">
+    <div class="exec-icon">👥</div>
+    <div class="exec-value">-44%</div>
+    <div class="exec-label">月活会员 2.3万→1.3万</div>
+    <div class="exec-badge">底盘萎缩</div>
+  </div>
+  <div class="exec-card red">
+    <div class="exec-icon">⚠️</div>
+    <div class="exec-value">21.3%</div>
+    <div class="exec-label">退款率 · 行业5-10%</div>
+    <div class="exec-badge">出血点</div>
+  </div>
+  <div class="exec-card green">
+    <div class="exec-icon">🚀</div>
+    <div class="exec-value">H2</div>
+    <div class="exec-label">黏客→销售 战略转段</div>
+    <div class="exec-badge">方向正确</div>
+  </div>
+</div>
+
+<!-- ====== KPI ====== -->
+<div class="kpi-grid">
+  <div class="kpi-card info">
+    <div class="icon">💰</div><div class="label">上半年 GMV</div>
+    <div class="value">3,206<span style="font-size:15px;font-weight:400;"> 万元</span></div>
+    <div class="sub-text">月均 534万 · 毛利率 33.9%</div>
+  </div>
+  <div class="kpi-card good">
+    <div class="icon">📦</div><div class="label">有效订单数</div>
+    <div class="value">79.7<span style="font-size:15px;font-weight:400;"> 万笔</span></div>
+    <div class="sub-text">客单价 40.2元</div>
+  </div>
+  <div class="kpi-card info">
+    <div class="icon">👥</div><div class="label">消费用户数</div>
+    <div class="value">3.59<span style="font-size:15px;font-weight:400;"> 万人</span></div>
+    <div class="sub-text">月活从2.3万降至1.3万</div>
+  </div>
+  <div class="kpi-card danger">
+    <div class="icon">⚠️</div><div class="label">退款率</div>
+    <div class="value">21.3<span style="font-size:15px;font-weight:400;">%</span></div>
+    <div class="sub-text">行业平均5-10%，严重偏高</div>
+  </div>
+  <div class="kpi-card danger">
+    <div class="icon">🏪</div><div class="label">闭店率</div>
+    <div class="value">38.8<span style="font-size:15px;font-weight:400;">%</span></div>
+    <div class="sub-text">201家中已关78家</div>
+  </div>
+  <div class="kpi-card purple">
+    <div class="icon">📋</div><div class="label">经营中门店</div>
+    <div class="value">123<span style="font-size:15px;font-weight:400;"> 家</span></div>
+    <div class="sub-text">6名督导 · 13个城市</div>
+  </div>
+</div>
+
+<!-- ====== Tab Navigation ====== -->
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="tab-overview">📌 总览</button>
+  <button class="tab-btn" data-tab="tab-stores">🏪 门店概况</button>
+  <button class="tab-btn" data-tab="tab-team">👥 人员安排</button>
+  <button class="tab-btn" data-tab="tab-sales">📈 销售数据</button>
+  <button class="tab-btn" data-tab="tab-projects">🚀 运营项目</button>
+  <button class="tab-btn" data-tab="tab-h2">🎯 下半年方向</button>
+</div>
+
+<!-- 底部总结 -->
+<div class="tab-panel active" data-tab="tab-overview">
+<div class="panel" style="margin-top:0;">
+  <div class="panel-header" style="background:linear-gradient(135deg, #1a1a2e, #16213e); color:#fff;">📌 总结</div>
+  <div class="panel-body" style="font-size:15px; line-height:1.8; padding:24px;">
+    <p>上半年GMV <strong>3,206万</strong>、毛利率 <strong>33.9%</strong>，<strong style="color:#ff4d4f;">三座大山压顶</strong>——</p>
+    <p style="margin:12px 0;">❶ 闭店率 <strong style="color:#ff4d4f;">38.8%</strong>（78家关停） ❷ <strong style="color:#ff4d4f;">55.5%</strong>门店日均不足千元（96家），碧景园日均7,160元为唯一>5,000元标杆 ❸ 活跃会员从<strong style="color:#ff4d4f;">2.3万萎缩至1.3万</strong></p>
+    <p style="margin-top:16px; padding:16px; background:#f6ffed; border-radius:8px; border-left:4px solid #52c41a;">
+      上半年跑通<strong>三个可复制模型</strong>（田间直采、怀山堂线下转化、送菜+回收），下半年从<strong>"黏客"切换到"销售"</strong>，用线下品鉴会和门店常态化活动把人气转化为销售额。<br>
+      <strong style="font-size:16px;">关键词：稳门店 · 提坪效 · 做销售 · 保生存</strong>
+    </p>
+  </div>
+</div>
+</div><!-- /tab-overview -->
+
+<!-- ====== 第一部分：门店概况 ====== -->
+<div class="tab-panel" data-tab="tab-stores">
+<div class="section-title">🏪 第一部分：门店概况</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-header">📊 各城市闭店率对比</div>
+    <div class="panel-body"><div id="chart-city-close" class="chart-lg"></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">🏷️ 各门店类型闭店分析</div>
+    <div class="panel-body"><div id="chart-type-close" class="chart-lg"></div></div>
+  </div>
+</div>
+
+<div class="grid-3">
+  <div class="insight-box red">
+    <div class="insight-title">🔴 承德：几乎全军覆没（85.7%）</div>
+    <div class="insight-text">7家关6家，开店模型在承德完全失败，仅剩1家经营中。但存活的那家店均GMV高达26.3万——值得复盘是选址还是店长能力。</div>
+  </div>
+  <div class="insight-box red">
+    <div class="insight-title">🔴 专营店：闭店重灾区（46.4%）</div>
+    <div class="insight-text">138家中关闭64家，加盟/合作模式的选址标准、培训体系、运营支持需要系统性复盘。</div>
+  </div>
+  <div class="insight-box green">
+    <div class="insight-title">🟢 保定：最高存活率（83.3%）</div>
+    <div class="insight-text">12家仅关2家，闭店率16.7%。是值得向其他城市复制的标杆市场。</div>
+  </div>
+</div>
+
+</div><!-- /tab-stores -->
+
+<!-- ====== 第二部分：人员安排与优化 ====== -->
+<div class="tab-panel" data-tab="tab-team">
+<div class="section-title">👥 第二部分：人员安排与优化</div>
+
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-header">📋 团队优化总览</div>
+    <div class="panel-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>岗位</th><th>优化前</th><th>优化后</th><th>精简</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>🏪 直营门店工作人员</strong></td>
+              <td class="num" style="color:#888;">13人</td>
+              <td class="num"><strong>7人</strong></td>
+              <td class="num" style="color:#52c41a;">-6人 (-46%)</td>
+              <td>6家直营门店，人均效能大幅提升</td>
+            </tr>
+            <tr>
+              <td><strong>👥 督导团队</strong></td>
+              <td class="num" style="color:#888;">8人（含1名培训师）</td>
+              <td class="num"><strong>6人</strong></td>
+              <td class="num" style="color:#52c41a;">-2人 (-25%)</td>
+              <td>精简岗位，职能重新划分</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight-box green" style="margin-top:16px;">
+        <div class="insight-title">✅ 优化成果：21人 → 13人（-38%）</div>
+        <div class="insight-text">在人员减少的同时，职能更加聚焦——督导从单纯"管门店"升级为<strong>"管门店+做销售"</strong>。</div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">📊 督导团队职能分工</div>
+    <div class="panel-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>职能方向</th><th>人数</th><th>核心职责</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>🏪 门店对接 + 线下销售</strong></td>
+              <td class="num"><strong>5人</strong></td>
+              <td>对接各地门店日常运营 + 承接门店线下销售活动的<strong>组织、策划、实施</strong></td>
+            </tr>
+            <tr>
+              <td><strong>📦 自建仓业务</strong></td>
+              <td class="num"><strong>1人</strong></td>
+              <td>重点负责自建仓板块业务</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight-box blue" style="margin-top:16px;">
+        <div class="insight-title">💡 职能升级：督导 = 销售推动者</div>
+        <div class="insight-text">5名门店督导不再只是"巡店+传达"，而是直接参与线下销售活动的全流程。与下半年"销售为主线"的战略方向一致。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tab-team -->
+
+<!-- ====== 第三部分：销售数据分析 ====== -->
+<div class="tab-panel" data-tab="tab-sales">
+<div class="section-title">📈 第三部分：上半年销售数据分析</div>
+
+<!-- 月度趋势 -->
+<div class="grid-2-1">
+  <div class="panel">
+    <div class="panel-header">📈 月度GMV趋势 & 活跃门店变化</div>
+    <div class="panel-body"><div id="chart-monthly" class="chart-lg"></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">📊 月度关键指标明细</div>
+    <div class="panel-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>月份</th><th>GMV(万)</th><th>环比</th><th>活跃店</th><th>客单价</th></tr></thead>
+          <tbody>
+            <tr><td>1月</td><td class="num"><strong>969</strong></td><td class="num">—</td><td class="num">164</td><td class="num">40.0元</td></tr>
+            <tr style="background:#fff1f0;"><td>2月</td><td class="num">302</td><td class="num" style="color:#ff4d4f;">-68.8%</td><td class="num">160</td><td class="num">29.8元</td></tr>
+            <tr><td>3月</td><td class="num">424</td><td class="num" style="color:#52c41a;">+40.4%</td><td class="num">158</td><td class="num">32.6元</td></tr>
+            <tr style="background:#f6ffed;"><td>4月</td><td class="num">582</td><td class="num" style="color:#52c41a;">+37.3%</td><td class="num">153</td><td class="num">45.4元</td></tr>
+            <tr><td>5月</td><td class="num">378</td><td class="num" style="color:#ff4d4f;">-35.1%</td><td class="num">140</td><td class="num">39.4元</td></tr>
+            <tr style="background:#fff1f0;"><td>6月</td><td class="num">332</td><td class="num" style="color:#ff4d4f;">-12.2%</td><td class="num">129</td><td class="num">38.1元</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight-box red" style="margin-top:16px;">
+        <div class="insight-title">⚠️ 活跃门店半年净减35家（-21%）</div>
+        <div class="insight-text">6月仅129家活跃，72家门店（36%）无任何销售。去掉1月春节脉冲，月均GMV仅约400万。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 城市维度分析（整合闭店率+GMV） -->
+<div class="grid-full">
+  <div class="panel">
+    <div class="panel-header">🏙️ 各城市GMV贡献度 + 健康度评估</div>
+    <div class="panel-body"><div id="chart-city-gmv" class="chart"></div></div>
+  </div>
+</div>
+
+<div class="grid-full">
+  <div class="panel">
+    <div class="panel-header">📋 城市交叉分析表（GMV + 闭店率 + 健康度）</div>
+    <div class="panel-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:10%;">城市</th><th style="width:8%;">门店数</th><th style="width:12%;">GMV(万元)</th><th style="width:8%;">GMV占比</th><th style="width:12%;">店均(万元)</th><th style="width:10%;">闭店率</th><th style="width:12%;">健康度评估</th><th style="width:28%;">判断说明</th></tr></thead>
+          <tbody>
+            <tr style="background:#e6f7ff;">
+              <td><strong>石家庄</strong></td><td class="num">76</td><td class="num"><strong>1,882.3</strong></td><td class="num">58.1%</td><td class="num">24.8</td><td class="num">38.2%</td><td class="num"><span class="tag tag-orange">🟡 警戒</span></td><td>一城独大，贡献近六成GMV，业务高度集中</td>
+            </tr>
+            <tr>
+              <td><strong>唐山</strong></td><td class="num">31</td><td class="num">495.2</td><td class="num">15.3%</td><td class="num">16.0</td><td class="num" style="color:#389e0d;">25.0%</td><td class="num"><span class="tag tag-green">🟢 健康</span></td><td>闭店率低、店均产出稳定，标杆市场</td>
+            </tr>
+            <tr>
+              <td><strong>廊坊</strong></td><td class="num">13</td><td class="num">267.0</td><td class="num">8.2%</td><td class="num">20.5</td><td class="num">35.7%</td><td class="num"><span class="tag tag-green">🟢 优秀</span></td><td>店均超20万，燕郊+广阳双核驱动</td>
+            </tr>
+            <tr>
+              <td>保定</td><td class="num">14</td><td class="num">152.5</td><td class="num">4.7%</td><td class="num">10.9</td><td class="num" style="color:#389e0d;">16.7%</td><td class="num"><span class="tag tag-green">🟢 标杆</span></td><td>闭店率最低，模式值得向其他城市复制</td>
+            </tr>
+            <tr style="background:#fff7e6;">
+              <td><strong>⚠️ 承德</strong></td><td class="num">4</td><td class="num">105.1</td><td class="num">3.2%</td><td class="num"><strong>26.3</strong></td><td class="num" style="color:#ff4d4f;font-weight:700;">85.7%</td><td class="num"><span class="tag tag-red">🔴 矛盾体</span></td><td>高闭店+高店均，存活门店极优秀但不可复制</td>
+            </tr>
+            <tr style="background:#fff7e6;">
+              <td>邯郸</td><td class="num">11</td><td class="num">90.5</td><td class="num">2.8%</td><td class="num">8.2</td><td class="num">42.9%</td><td class="num"><span class="tag tag-orange">🟡 偏高</span></td><td>闭店率超四成，需关注</td>
+            </tr>
+            <tr style="background:#fff1f0;">
+              <td>张家口</td><td class="num">7</td><td class="num">55.6</td><td class="num">1.7%</td><td class="num">7.9</td><td class="num" style="color:#ff4d4f;">50.0%</td><td class="num"><span class="tag tag-red">🔴 高危</span></td><td>闭店过半，店均不足8万</td>
+            </tr>
+            <tr>
+              <td>太原</td><td class="num">2</td><td class="num">51.6</td><td class="num">1.6%</td><td class="num">25.8</td><td class="num" style="color:#ff4d4f;">50.0%</td><td class="num"><span class="tag tag-orange">🟡 两极化</span></td><td>机场店单店强但整体规模小</td>
+            </tr>
+            <tr style="background:#fff1f0;">
+              <td>秦皇岛</td><td class="num">4</td><td class="num">47.8</td><td class="num">1.5%</td><td class="num">12.0</td><td class="num">33.3%</td><td class="num"><span class="tag tag-orange">🟡 关注</span></td><td>规模小，需观察走势</td>
+            </tr>
+            <tr style="background:#fff1f0;">
+              <td>邢台</td><td class="num">6</td><td class="num">42.0</td><td class="num">1.3%</td><td class="num">7.0</td><td class="num">40.0%</td><td class="num"><span class="tag tag-red">🔴 低效</span></td><td>店均仅7万，闭店率四成</td>
+            </tr>
+            <tr style="background:#fff1f0;">
+              <td>衡水</td><td class="num">8</td><td class="num">22.8</td><td class="num">0.7%</td><td class="num">2.9</td><td class="num" style="color:#ff4d4f;font-weight:700;">63.6%</td><td class="num"><span class="tag tag-red">🔴 濒危</span></td><td>闭店近2/3，店均不足3万，模型失败</td>
+            </tr>
+            <tr style="background:#fff1f0;">
+              <td>沧州</td><td class="num">5</td><td class="num">21.3</td><td class="num">0.7%</td><td class="num">4.3</td><td class="num">40.0%</td><td class="num"><span class="tag tag-red">🔴 低效</span></td><td>店均仅4.3万，闭店率四成</td>
+            </tr>
+            <tr>
+              <td>忻州</td><td class="num">1</td><td class="num">3.7</td><td class="num">0.1%</td><td class="num">3.7</td><td class="num" style="color:#389e0d;">0.0%</td><td class="num"><span class="tag tag-green">🟢 稳定</span></td><td>仅1家，体量太小无统计意义</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 日均销售分段 + 逐月变化 -->
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-header">📊 门店日均销售额分段分布</div>
+    <div class="panel-body"><div id="chart-daily-tier" class="chart-lg"></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">📅 逐月日均销售额分段变化</div>
+    <div class="panel-body"><div id="chart-monthly-tier" class="chart-lg"></div></div>
+  </div>
+</div>
+
+<div class="grid-3">
+  <div class="insight-box red">
+    <div class="insight-title">🔴 96家赔钱（55.5%）</div>
+    <div class="insight-text">日均<1,000元。其中10家停摆（<100元）、39家远不足成本、<strong>60家距千元线一步之遥（帮扶优先）</strong>。</div>
+  </div>
+  <div class="insight-box yellow">
+    <div class="insight-title">🟡 65家中等（37.6%）</div>
+    <div class="insight-text">日均1,000-3,000元。挣扎于盈亏线，需线下活动和爆品来突破产出天花板。</div>
+  </div>
+  <div class="insight-box red">
+    <div class="insight-title">🟢 1家>5,000元 + 11家>3,000元（12.0%）</div>
+    <div class="insight-text">碧景园日均7,160元独一档；天山熙湖、金色里程等11家在3,000-5,000元区间。头部门店集中在石家庄核心社区。</div>
+  </div>
+</div>
+
+<!-- 用户结构 -->
+<div class="grid-2">
+  <div class="panel">
+    <div class="panel-header">👥 用户消费层级：1.3% VIP贡献24.6% GMV</div>
+    <div class="panel-body"><div id="chart-user-level" class="chart"></div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">🔄 用户复购：45%用户仅购买1个月后流失</div>
+    <div class="panel-body"><div id="chart-user-freq" class="chart"></div></div>
+  </div>
+</div>
+
+<!-- 数据总结 -->
+<div class="grid-3">
+  <div class="insight-box red">
+    <div class="insight-title">⚠️ 门店盈利能力极弱</div>
+    <div class="insight-text">55.5%门店日均<1,000元（96家），1家>5,000元（碧景园7,160元），11家>3,000元。头部门店集中在石家庄，单店模型亟待改善。</div>
+  </div>
+  <div class="insight-box red">
+    <div class="insight-title">⚠️ 活跃会员底盘萎缩</div>
+    <div class="insight-text">月下单会员从2.3万降至1.3万（-44.4%），50%用户消费<100元。需求端持续萎缩。</div>
+  </div>
+  <div class="insight-box red">
+    <div class="insight-title">⚠️ 闭店失血持续</div>
+    <div class="insight-text">38.8%闭店率，专营店46.4%。承德（85.7%）、衡水（63.6%）模型基本失败，需决策：救还是退？</div>
+  </div>
+</div>
+
+</div><!-- /tab-sales -->
+
+<!-- ====== 第四部分：上半年运营项目回顾 ====== -->
+<div class="tab-panel" data-tab="tab-projects">
+<div class="section-title">🚀 第四部分：上半年运营项目回顾</div>
+
+<div class="insight-box blue" style="margin-bottom:20px;">
+  <div class="insight-title">🎯 上半年核心逻辑：黏客为主线 → 下半年转销售</div>
+  <div class="insight-text">围绕"黏客、转化、门店赋能"三条主线，共推进5个项目，跑通3个可复制模型。但黏客做了、人气有了，<strong>销售没跟上</strong>——55.5%门店日均仍不足千元。</div>
+</div>
+
+<!-- 第一行：三列 -->
+<div class="grid-3">
+  <div class="project-card">
+    <div class="proj-num">01</div>
+    <div class="proj-title">🌾 田间地头直采 + 生鲜团购</div>
+    <div class="proj-meta">4月启动 | 供应链+黏客 | 投入：低</div>
+    <div class="proj-desc">督导对接供应链→店长直播+群接龙→薄利多销黏客。单品类单次销量稳定1,000斤以上，甘蓝单品累计4,000+斤。</div>
+    <div class="proj-result">⭐⭐⭐ 模式已成熟，可扩品放量</div>
+  </div>
+  <div class="project-card">
+    <div class="proj-num">02</div>
+    <div class="proj-title">👕 旧衣回收 + 无人车配送</div>
+    <div class="proj-meta">4月启动 | 门店服务 | 投入：低</div>
+    <div class="proj-desc">石家庄20家门店落地，累计回收3吨。无人车送菜同时带回旧衣，"一趟车两件事"提效降本。保定7家已复制，唐山推进中。</div>
+    <div class="proj-result">⭐⭐⭐ 已跨城复制，门店→社区服务站</div>
+  </div>
+  <div class="project-card">
+    <div class="proj-num">03</div>
+    <div class="proj-title">🏖️ 周边一日游（3场）</div>
+    <div class="proj-meta">5-6月 | 线下活动 | 投入：中</div>
+    <div class="proj-desc">秦王湖300+人/18店、樱桃采摘50人、狼牙山50人。测试旅游需求，吸引中高端会员，为长途旅游做铺垫。</div>
+    <div class="proj-result">⭐⭐ 可留10元利润空间，门店陪同=信任</div>
+  </div>
+</div>
+
+<!-- 第二行：两列居中 -->
+<div class="grid-2-centered">
+  <div class="project-card">
+    <div class="proj-num">04</div>
+    <div class="proj-title">🏠 家政服务项目</div>
+    <div class="proj-meta">6月启动 | 门店服务 | 投入：低</div>
+    <div class="proj-desc">"惠买会生活"概念，门店做流量入口赚10个点利润。把实体店从卖货延伸到卖服务——服务是流量入口，商品是利润出口。</div>
+    <div class="proj-result">⭐ 石家庄试点中，跑通后扩城</div>
+  </div>
+  <div class="project-card" style="border-top-color: #ff4d4f;">
+    <div class="proj-num">05</div>
+    <div class="proj-title">🎯 怀山堂线下销售测试 🔥</div>
+    <div class="proj-meta">6月25日 | 销售模式验证 | 投入：中</div>
+    <div class="proj-desc">单场销售<strong>14.6万元</strong>，现场转化率<strong>69%</strong>，退货率仅<strong>8%</strong>（线上21%）。验证了"线上种草→精准邀约→线下成交"闭环可行。</div>
+    <div class="proj-result" style="background:#fff1f0;color:#cf1322;">🔥 50人黄金规模+老两口客群=下半年核心模型</div>
+  </div>
+</div>
+
+<!-- 三个可复制模型 -->
+<div class="grid-3" style="margin-top:20px;">
+  <div class="insight-box green">
+    <div class="insight-title">⭐ 模型一：田间直采供应链</div>
+    <div class="insight-text">督导对接→门店直播+群接龙→薄利多销黏客。已成熟，H2扩品放量。</div>
+  </div>
+  <div class="insight-box green">
+    <div class="insight-title">⭐ 模型二：怀山堂线下转化</div>
+    <div class="insight-text">50人黄金规模+精准邀约+前期种草→69%转化率。已验证，H2推广至海参、石药等品类。</div>
+  </div>
+  <div class="insight-box green">
+    <div class="insight-title">⭐ 模型三："送菜+回收"一趟车</div>
+    <div class="insight-text">无人车送生鲜+带回旧衣，实物+服务协同降本。H2更多城市复制。</div>
+  </div>
+</div>
+
+</div><!-- /tab-projects -->
+
+<!-- ====== 第五部分：下半年工作方向 ====== -->
+<div class="tab-panel" data-tab="tab-h2">
+<div class="section-title">🎯 第五部分：下半年工作方向</div>
+
+<!-- 战略转段 -->
+<div class="panel" style="margin-bottom:20px;">
+  <div class="panel-header">🔄 战略转段：从"黏客"到"销售"</div>
+  <div class="panel-body">
+    <div class="strategy-flow">
+      <div class="flow-box h1">
+        <div class="flow-label">H1</div>
+        <div class="flow-title">黏客为主线</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;">做活动、聚人气、提频次</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background:#fff7e6;border:2px solid #ffe58f;">
+        <div class="flow-label">问题</div>
+        <div class="flow-title" style="color:#d46b08;">人气有了<br>55.5%门店赔钱</div>
+        <div style="font-size:11px;color:#888;">55.5%门店赔钱</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box h2">
+        <div class="flow-label">H2</div>
+        <div class="flow-title">销售为主线</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;">做转化、提客单、保生存</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:12px;padding:12px;background:#f6ffed;border-radius:8px;font-size:14px;font-weight:600;color:#389e0d;">
+      🎯 三线并行：门店小型养会员 + 公司中型打爆品 + 品牌工业游做维护
+    </div>
+  </div>
+</div>
+
+<!-- H2 三大项目 -->
+<div class="section-title" style="font-size:15px;">📋 下半年三大重点项目</div>
+
+<div class="grid-3">
+  <div class="project-card h2">
+    <div class="proj-num">P0</div>
+    <div class="proj-title">🏪 门店小型品鉴会常态化</div>
+    <div class="proj-meta">小型 · 高频次 · 店长独立承接</div>
+    <div class="proj-desc">
+      <strong>核心打法：</strong><br>
+      ① 筛选有活动空间和客群基础的门店<br>
+      ② 灵活活动内容（试饮/品尝/健康咨询）<br>
+      ③ 排期轮转（一周1-2店）→ 常态化日历<br>
+      ④ 模式简化，店长可独立执行
+    </div>
+  </div>
+  <div class="project-card h2">
+    <div class="proj-num">P0</div>
+    <div class="proj-title">🎯 中型线下销售会（公司级）</div>
+    <div class="proj-meta">公司举办 · 多品类轮换 · 集中转化</div>
+    <div class="proj-desc">
+      <strong>品类线：</strong><br>
+      🦪 海参品鉴会 — 精准邀约老客户<br>
+      💊 石药项目 — 大健康跨界联动<br>
+      📦 扩展品类 — 后期加大测试<br>
+      <strong>核心：</strong>精准邀约+转化率考核+高频复制
+    </div>
+  </div>
+  <div class="project-card h2">
+    <div class="proj-num">P1</div>
+    <div class="proj-title">🏭 品牌工业游</div>
+    <div class="proj-meta">品牌背书 · 会员维护 · 体验转订单</div>
+    <div class="proj-desc">
+      <strong>合作品牌：</strong>修正、东阿阿胶、江中等<br>
+      ① 对接品牌工厂资源降成本<br>
+      ② 提前制定方案（时间/人数/交通/伴手礼）<br>
+      ③ 途中宣讲+预定引导→体验转订单
+    </div>
+  </div>
+</div>
+
+<!-- H2 目标 + 路线图 -->
+<div class="grid-2" style="margin-top:20px;">
+  <div class="panel">
+    <div class="panel-header">🎯 下半年目标拆解</div>
+    <div class="panel-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>指标</th><th>H1实际</th><th>H2目标</th><th>变化</th></tr></thead>
+          <tbody>
+            <tr><td><strong>GMV</strong></td><td class="num">3,206万</td><td class="num"><strong style="color:#1890ff;">4,000万</strong></td><td class="num" style="color:#52c41a;">+24.8%</td></tr>
+            <tr><td><strong>日均>1,000元门店占比</strong></td><td class="num">44.5%</td><td class="num"><strong style="color:#1890ff;">55%</strong></td><td class="num" style="color:#52c41a;">+10.5pp</td></tr>
+            <tr><td><strong>线下销售贡献</strong></td><td class="num">14.6万</td><td class="num"><strong style="color:#1890ff;">200万+</strong></td><td class="num" style="color:#52c41a;">10倍+</td></tr>
+            <tr><td><strong>退款率</strong></td><td class="num" style="color:#ff4d4f;">21.3%</td><td class="num"><strong style="color:#52c41a;">≤15%</strong></td><td class="num" style="color:#52c41a;">-6pp</td></tr>
+            <tr><td><strong>H2新增闭店</strong></td><td class="num" style="color:#ff4d4f;">H1已闭78家</td><td class="num"><strong style="color:#52c41a;">≤10家</strong></td><td class="num">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">📅 Q3-Q4 节奏规划</div>
+    <div class="panel-body">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="tl-date">7月</div>
+          <div class="tl-title">海参品鉴会首场测试 + 门店活动排期表落地</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">8月</div>
+          <div class="tl-title">海参模式多店轮转 + 石药合作框架敲定 + 首场品牌工业游</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">9月</div>
+          <div class="tl-title">中秋主题中型销售会 + Q3复盘 + H2冲刺启动</div>
+        </div>
+        <div class="timeline-item q4">
+          <div class="tl-date">10月</div>
+          <div class="tl-title">重阳节银发主题销售 + 多品类线下测试</div>
+        </div>
+        <div class="timeline-item q4">
+          <div class="tl-date">11月</div>
+          <div class="tl-title">双11线上配合 + 工业游密集期</div>
+        </div>
+        <div class="timeline-item q4">
+          <div class="tl-date">12月</div>
+          <div class="tl-title">年货节选品筹备 + 年度冲刺 + 年终总结</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tab-h2 -->
+
+</div><!-- /container -->
+
+<!-- ====== Tab Switching ====== -->
+<script>
+(function(){
+  var btns = document.querySelectorAll('.tab-btn');
+  var panels = document.querySelectorAll('.tab-panel');
+  btns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var target = this.getAttribute('data-tab');
+      btns.forEach(function(b){ b.classList.remove('active'); });
+      this.classList.add('active');
+      panels.forEach(function(p){
+        p.classList.toggle('active', p.getAttribute('data-tab') === target);
+      });
+      // Resize echarts in newly visible panel
+      setTimeout(function(){
+        var panel = document.querySelector('.tab-panel.active');
+        if(panel){
+          var charts = panel.querySelectorAll('[id^="chart-"]');
+          charts.forEach(function(el){
+            var instance = echarts.getInstanceByDom(el);
+            if(instance) instance.resize();
+          });
+        }
+      }, 100);
+    });
+  });
+})();
+</script>
+
+<!-- ====== ECHARTS ====== -->
+<script>
+const colors = {
+  blue:'#1890ff', green:'#52c41a', red:'#ff4d4f', orange:'#fa8c16',
+  purple:'#722ed1', cyan:'#13c2c2', gold:'#fadb14',
+  redLight:'#ff7875', orangeLight:'#ffc069', blueLight:'#69c0ff',
+};
+
+// ====== Chart 1: 各城市闭店率 ======
+(function(){
+  var dom = document.getElementById('chart-city-close');
+  var chart = echarts.init(dom);
+  var citiesRaw = ['承德','衡水','张家口','太原','邯郸','沧州','邢台','石家庄','廊坊','秦皇岛','唐山','保定','忻州'];
+  var closeRateRaw = [85.7,63.6,50.0,50.0,42.9,40.0,40.0,38.2,35.7,33.3,25.0,16.7,0.0];
+  var totalStoresRaw = [7,11,10,2,14,5,5,89,14,3,28,12,1];
+  var openStoresRaw = [1,4,5,1,8,3,3,55,9,2,21,10,1];
+  var colors_arr = closeRateRaw.map(function(v) {
+    if(v>=50) return colors.red; if(v>=40) return colors.orange; if(v>=35) return colors.gold; return colors.green;
+  });
+  var N = citiesRaw.length;
+  var revCities=[], revRate=[], revColors=[], revTotal=[], revOpen=[];
+  for(var k=N-1;k>=0;k--) {
+    revCities.push(citiesRaw[k]); revRate.push(closeRateRaw[k]);
+    revColors.push(colors_arr[k]); revTotal.push(totalStoresRaw[k]); revOpen.push(openStoresRaw[k]);
+  }
+  var option = {
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'},
+      formatter: function(p) {
+        var nm = p[0].name, i = citiesRaw.indexOf(nm);
+        if(i<0) return nm;
+        return '<b>'+nm+'</b><br/>闭店率: <b style="color:'+colors_arr[i]+'">'+closeRateRaw[i]+'%</b><br/>累计开店: '+totalStoresRaw[i]+'家<br/>经营中: '+openStoresRaw[i]+'家<br/>已闭店: '+(totalStoresRaw[i]-openStoresRaw[i])+'家';
+      }
+    },
+    grid: { left:'3%', right:'8%', bottom:'3%', top:'3%', containLabel:true },
+    xAxis: { type:'value', name:'闭店率(%)', max:100, axisLabel:{formatter:'{value}%'}, splitLine:{lineStyle:{type:'dashed'}} },
+    yAxis: { type:'category', data:revCities },
+    series: [{ type:'bar', barWidth:18,
+      data: revRate.map(function(v,i){ return {value:v, itemStyle:{color:revColors[i], borderRadius:[0,4,4,0]}}; }),
+      label: { show:true, position:'right', formatter:'{c}%', fontSize:11 },
+      markLine: { silent:true, symbol:'none', data:[{xAxis:38.8, label:{formatter:'平均 38.8%',fontSize:11}, lineStyle:{color:'#ff4d4f',type:'dashed'}}] }
+    }]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){chart.resize();});
+})();
+
+// ====== Chart 2: 各门店类型闭店分析 ======
+(function(){
+  var dom = document.getElementById('chart-type-close');
+  var chart = echarts.init(dom);
+  var option = {
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'},
+      formatter: function(p) {
+        var types=['专营店','合营店','店中店','员工店','直营店'];
+        var total=[138,4,5,48,6], open=[74,2,4,38,5], closed=[64,2,1,10,1], rate=[46.4,50.0,20.0,20.8,16.7];
+        var i=p[0].dataIndex;
+        return '<b>'+types[i]+'</b><br/>累计: '+total[i]+'家<br/>经营中: '+open[i]+'家<br/>已闭店: '+closed[i]+'家<br/>闭店率: <b>'+rate[i]+'%</b>';
+      }
+    },
+    legend: { data:['经营中','已闭店'], bottom:0 },
+    grid: { left:'3%', right:'4%', bottom:'12%', top:'3%', containLabel:true },
+    xAxis: { type:'category', data:['专营店','合营店','店中店','员工店','直营店'] },
+    yAxis: { type:'value', name:'门店数' },
+    series: [
+      { name:'经营中', type:'bar', stack:'total', data:[74,2,4,38,5], itemStyle:{color:colors.green}, barWidth:40, label:{show:true,position:'inside',fontSize:12,fontWeight:600} },
+      { name:'已闭店', type:'bar', stack:'total', data:[64,2,1,10,1], itemStyle:{color:colors.redLight,borderRadius:[4,4,0,0]}, label:{show:true,position:'inside',fontSize:12,fontWeight:600} }
+    ]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){chart.resize();});
+})();
+
+// ====== Chart 3: 月度GMV趋势 ======
+(function(){
+  var dom = document.getElementById('chart-monthly');
+  var chart = echarts.init(dom);
+  var option = {
+    tooltip: { trigger:'axis' },
+    legend: { data:['GMV(万元)','活跃门店数','客单价(元)'], bottom:0 },
+    grid: { left:'3%', right:'5%', bottom:'14%', top:'5%', containLabel:true },
+    xAxis: { type:'category', data:['1月','2月','3月','4月','5月','6月'] },
+    yAxis: [ { type:'value', name:'GMV(万元)' }, { type:'value', name:'门店数/客单价' } ],
+    series: [
+      { name:'GMV(万元)', type:'bar', data:[969,302,424,582,378,332], barWidth:32,
+        itemStyle:{color:function(p){return [969,302,424,582,378,332][p.dataIndex]>=500?colors.blue:colors.blueLight;}},
+        label:{show:true,position:'top',fontSize:12,fontWeight:600,formatter:'{c}万'} },
+      { name:'活跃门店数', type:'line', yAxisIndex:1, data:[164,160,158,153,140,129],
+        lineStyle:{color:colors.green,width:3}, itemStyle:{color:colors.green}, symbol:'circle',symbolSize:8,
+        label:{show:true,fontSize:11,formatter:'{c}家'} },
+      { name:'客单价(元)', type:'line', yAxisIndex:1, data:[40.0,29.8,32.6,45.4,39.4,38.1],
+        lineStyle:{color:colors.orange,width:2,type:'dashed'}, itemStyle:{color:colors.orange}, symbol:'diamond',symbolSize:8,
+        label:{show:true,fontSize:11,formatter:'{c}元'} }
+    ]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){chart.resize();});
+})();
+
+// ====== Chart 4: 各城市GMV贡献度 ======
+(function(){
+  var dom = document.getElementById('chart-city-gmv');
+  var chart = echarts.init(dom);
+  var cities = ['石家庄','唐山','廊坊','保定','承德','邯郸','张家口','太原','秦皇岛','邢台','衡水','沧州','忻州'];
+  var gmvRaw = [1882.3,495.2,267.0,152.5,105.1,90.5,55.6,51.6,47.8,42.0,22.8,21.3,3.7];
+  var storeCount = [76,31,13,14,4,11,7,2,4,6,8,5,1];
+  var closeRate = [38.2,25.0,35.7,16.7,85.7,42.9,50.0,50.0,33.3,40.0,63.6,40.0,0.0];
+  var topColors = [colors.blue,colors.green,colors.green,colors.cyan,colors.orange,colors.cyan,colors.orangeLight,colors.orangeLight,colors.orangeLight,colors.orangeLight,colors.orangeLight,colors.orangeLight,colors.orangeLight];
+  var N = cities.length;
+  var revCities=[], revGmv=[], revColors=[], revStores=[], revClose=[];
+  for(var k=N-1;k>=0;k--) {
+    revCities.push(cities[k]); revGmv.push(gmvRaw[k]); revColors.push(topColors[k]);
+    revStores.push(storeCount[k]); revClose.push(closeRate[k]);
+  }
+  var option = {
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'},
+      formatter: function(p) {
+        var v=p[0].value, nm=p[0].name, i=cities.indexOf(nm);
+        if(i<0) return nm;
+        var pct=(v/3237.4*100).toFixed(1);
+        var perStore=(v/storeCount[i]).toFixed(1);
+        var cr=closeRate[i];
+        var health='';
+        if(cr>=50) health='🔴 高危';
+        else if(cr>=40) health='🟡 警戒';
+        else if(cr>=30) health='🟡 关注';
+        else health='🟢 健康';
+        return '<b>'+nm+'</b><br/>GMV: <b>'+v.toFixed(1)+'万元</b>（占比'+pct+'%）<br/>门店: '+storeCount[i]+'家 | 店均: '+perStore+'万<br/>闭店率: <b style="color:'+(cr>=50?colors.red:cr>=35?colors.orange:colors.green)+'">'+cr+'%</b> | 健康度: <b>'+health+'</b>';
+      }
+    },
+    grid: { left:'3%', right:'12%', bottom:'3%', top:'3%', containLabel:true },
+    xAxis: { type:'value', name:'GMV(万元)', axisLabel:{formatter:'{value}万'} },
+    yAxis: { type:'category', data:revCities, axisLabel:{fontSize:13,fontWeight:'bold'} },
+    series: [{ type:'bar', barWidth:20,
+      data: revGmv.map(function(v,i){ return {value:v, itemStyle:{color:revColors[i], borderRadius:[0,6,6,0]}}; }),
+      label: { show:true, position:'right', formatter:function(p){return p.value.toFixed(0)+'万';}, fontSize:12, fontWeight:600, color:'#333' }
+    }]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){chart.resize();});
+})();
+
+// ====== Chart 5: 门店日均销售额分段 ======
+(function(){
+  var dom = document.getElementById('chart-daily-tier');
+  var chart = echarts.init(dom);
+  var option = {
+    tooltip: { trigger:'item', formatter:'{b}: {c}家 ({d}%)' },
+    legend: { orient:'vertical', right:10, top:'center' },
+    series: [{ type:'pie', radius:['45%','75%'], center:['40%','50%'], avoidLabelOverlap:false,
+      itemStyle:{borderRadius:6,borderColor:'#fff',borderWidth:3},
+      label:{show:true,formatter:'{b}\n{c}家 ({d}%)',fontSize:12},
+      emphasis:{label:{fontSize:16,fontWeight:'bold'}},
+      data: [
+        {value:96,name:'<1,000元（赔钱）',itemStyle:{color:colors.red}},
+        {value:65,name:'1,000-3,000元',itemStyle:{color:colors.orange}},
+        {value:11,name:'3,000-5,000元（可维持）',itemStyle:{color:colors.green}},
+        {value:1,name:'>5,000元（盈利）',itemStyle:{color:colors.blue}}
+      ]
+    }]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){chart.resize();});
+})();
+
+// ====== Chart 6: 逐月日均分段变化 ======
+(function(){
+  var dom = document.getElementById('chart-monthly-tier');
+  var chart = echarts.init(dom);
+  var option = {
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'} },
+    legend: { data:['<1,000元','1,000-3,000元','3,000-5,000元','>5,000元'], bottom:0 },
+    grid: { left:'3%', right:'4%', bottom:'14%', top:'5%', containLabel:true },
+    xAxis: { type:'category', data:['1月','2月','3月','4月','5月','6月'] },
+    yAxis: { type:'value', name:'门店数' },
+    series: [
+      { name:'<1,000元', type:'bar', stack:'total', data:[53,127,109,79,98,93], itemStyle:{color:'#ff7875'}, barWidth:40, label:{show:true,position:'inside',fontSize:10,formatter:function(p){return p.value>0?p.value:'';}} },
+      { name:'1,000-3,000元', type:'bar', stack:'total', data:[82,32,47,61,37,30], itemStyle:{color:'#ffc069'}, label:{show:true,position:'inside',fontSize:10,formatter:function(p){return p.value>0?p.value:'';}} },
+      { name:'3,000-5,000元', type:'bar', stack:'total', data:[19,1,2,11,5,5], itemStyle:{color:'#95de64'}, label:{show:true,position:'inside',fontSize:10,formatter:function(p){return p.value>0?p.value:'';}} },
+      { name:'>5,000元', type:'bar', stack:'total', data:[10,0,0,2,0,1], itemStyle:{color:'#1890ff'}, label:{show:true,position:'inside',fontSize:10,formatter:function(p){return p.value>0?p.value:'';}} }
+    ]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){chart.resize();});
+})();
+
+// ====== Chart 7: 用户消费层级 ======
+(function(){
+  var dom = document.getElementById('chart-user-level');
+  var chart = echarts.init(dom);
+  var option = {
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'} },
+    legend: { data:['人数占比','GMV贡献占比'], bottom:0 },
+    grid: { left:'3%', right:'4%', bottom:'14%', top:'5%', containLabel:true },
+    xAxis: { type:'category', data:['<100元','100-500','500-1K','1K-3K','3K-10K','10K+'] },
+    yAxis: { type:'value', name:'占比(%)', max:60, axisLabel:{formatter:'{value}%'} },
+    series: [
+      { name:'人数占比', type:'bar', data:[50.2,20.8,9.0,12.5,6.2,1.3], itemStyle:{color:colors.blueLight,borderRadius:[4,4,0,0]}, barWidth:24, label:{show:true,position:'top',fontSize:10,formatter:'{c}%'} },
+      { name:'GMV贡献占比', type:'bar', data:[1.0,6.0,7.3,24.9,36.1,24.6], itemStyle:{color:colors.blue,borderRadius:[4,4,0,0]}, barWidth:24, label:{show:true,position:'top',fontSize:10,formatter:'{c}%'} }
+    ]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){chart.resize();});
+})();
+
+// ====== Chart 8: 用户复购频次 ======
+(function(){
+  var dom = document.getElementById('chart-user-freq');
+  var chart = echarts.init(dom);
+  var option = {
+    tooltip: { trigger:'item', formatter:'{b}: {c}人 ({d}%)' },
+    legend: { bottom:0 },
+    series: [{ type:'pie', radius:['40%','70%'], center:['50%','48%'], avoidLabelOverlap:false,
+      itemStyle:{borderRadius:6,borderColor:'#fff',borderWidth:3},
+      label:{show:true,formatter:'{b}\n{c}人 ({d}%)',fontSize:11},
+      data: [
+        {value:16741,name:'1个月后流失',itemStyle:{color:colors.red}},
+        {value:8105,name:'2-3个月复购',itemStyle:{color:colors.orange}},
+        {value:5536,name:'4-5个月复购',itemStyle:{color:colors.blueLight}},
+        {value:6738,name:'6个月全勤',itemStyle:{color:colors.green}}
+      ]
+    }]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){chart.resize();});
+})();
+</script>
+
+</body>
+</html>
