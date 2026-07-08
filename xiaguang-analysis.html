@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>霞光 · 北宋店会员深度分析</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f0f2f5; color: #333; min-height: 100vh; }
+
+.header { background: linear-gradient(135deg, #1a3a4a 0%, #2d6a7e 100%); color: #fff; padding: 28px 32px; text-align: center; }
+.header h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+.header .meta { font-size: 13px; opacity: 0.75; margin-top: 6px; }
+.header .back { display: inline-block; margin-top: 10px; color: #fff; text-decoration: none; font-size: 13px; opacity: 0.7; }
+.header .back:hover { opacity: 1; }
+
+.container { max-width: 860px; margin: 0 auto; padding: 24px 20px; }
+
+/* KPI 卡片 */
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+.kpi-card { background: #fff; border-radius: 10px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.kpi-card .kpi-val { font-size: 26px; font-weight: 700; }
+.kpi-card .kpi-label { font-size: 12px; color: #888; margin-top: 4px; }
+.kpi-red .kpi-val { color: #e74c3c; }
+.kpi-green .kpi-val { color: #27ae60; }
+.kpi-blue .kpi-val { color: #2980b9; }
+.kpi-orange .kpi-val { color: #e67e22; }
+
+/* 区块 */
+.section { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.section h2 { font-size: 18px; color: #1a3a4a; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0f2f5; }
+.section h2 .emoji { margin-right: 6px; }
+
+/* 表格 */
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; padding: 10px 12px; background: #f8f9fa; font-weight: 600; color: #555; font-size: 13px; border-bottom: 2px solid #e0e0e0; }
+td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
+tr:hover td { background: #fafbfc; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.badge-red { background: #ffeaea; color: #e74c3c; }
+.badge-yellow { background: #fff8e6; color: #e67e22; }
+.badge-green { background: #e8f5e9; color: #27ae60; }
+.badge-gray { background: #f0f0f0; color: #888; }
+
+/* 柱状图 */
+.bar-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.bar-label { width: 50px; font-size: 12px; color: #666; text-align: right; flex-shrink: 0; }
+.bar-track { flex: 1; height: 22px; background: #f0f2f5; border-radius: 4px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; display: flex; align-items: center; padding-left: 8px; font-size: 12px; color: #fff; font-weight: 600; }
+.bar-fill.red { background: linear-gradient(90deg, #e74c3c, #f39c12); }
+.bar-fill.green { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+.bar-fill.blue { background: linear-gradient(90deg, #2980b9, #3498db); }
+.bar-num { font-size: 12px; color: #888; width: 40px; flex-shrink: 0; }
+
+/* 双列布局 */
+.col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.insight-box { background: #f8f9fa; border-left: 4px solid #2d6a7e; padding: 14px 18px; border-radius: 0 8px 8px 0; margin-top: 16px; }
+.insight-box h4 { font-size: 14px; margin-bottom: 4px; color: #1a3a4a; }
+.insight-box p { font-size: 13px; color: #666; line-height: 1.6; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { padding: 3px 10px; border-radius: 12px; font-size: 11px; background: #e3f2fd; color: #2980b9; }
+
+.footer { text-align: center; padding: 20px; font-size: 12px; color: #aaa; }
+
+@media (max-width: 640px) {
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .col2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔍 霞光 · 北宋店会员深度分析</h1>
+  <div class="meta">HM11014 | 1019石家庄长安北宋会员店 | 2026年1月~5月</div>
+  <a href="index.html" class="back">← 返回导航首页</a>
+</div>
+
+<div class="container">
+
+<!-- KPI -->
+<div class="kpi-row">
+  <div class="kpi-card kpi-blue"><div class="kpi-val">398</div><div class="kpi-label">总订单</div></div>
+  <div class="kpi-card kpi-green"><div class="kpi-val">109天</div><div class="kpi-label">活跃天数</div></div>
+  <div class="kpi-card kpi-orange"><div class="kpi-val">22,446</div><div class="kpi-label">总GMV(元)</div></div>
+  <div class="kpi-card kpi-red"><div class="kpi-val">51.8%</div><div class="kpi-label">退货率</div></div>
+  <div class="kpi-card kpi-blue"><div class="kpi-val">318</div><div class="kpi-label">购买品类</div></div>
+</div>
+
+<!-- 核心发现 -->
+<div class="section">
+  <h2><span class="emoji">🎯</span>核心画像</h2>
+  <div class="col2">
+    <div>
+      <table>
+        <tr><td style="color:#888">会员编号</td><td><strong>HM11014</strong></td></tr>
+        <tr><td style="color:#888">昵称</td><td><strong>霞光</strong></td></tr>
+        <tr><td style="color:#888">门店</td><td>1019石家庄长安北宋会员店</td></tr>
+        <tr><td style="color:#888">时间跨度</td><td>2026-01-01 ~ 2026-05-31</td></tr>
+        <tr><td style="color:#888">日均下单</td><td>3.7 单</td></tr>
+        <tr><td style="color:#888">客单价</td><td>56.4 元</td></tr>
+      </table>
+    </div>
+    <div>
+      <table>
+        <tr><td style="color:#888">完成订单</td><td><span class="badge badge-green">192单 (48.2%)</span></td></tr>
+        <tr><td style="color:#888">退款订单</td><td><span class="badge badge-red">206单 (51.8%)</span></td></tr>
+        <tr><td style="color:#888">正常品均价</td><td><strong>43 元</strong>（便宜的留下）</td></tr>
+        <tr><td style="color:#888">退款品均价</td><td><strong style="color:#e74c3c">69 元</strong>（贵的退掉）</td></tr>
+        <tr><td style="color:#888">净GMV</td><td>8,185 元（退款后）</td></tr>
+        <tr><td style="color:#888">客户类型</td><td><span class="badge badge-yellow">试吃型消费</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="insight-box">
+    <h4>💡 关键判断：不是恶意客户，是"试吃型"粉丝</h4>
+    <p>109天几乎每天来 → 高度活跃真粉丝。318种商品 → 对新品有极大兴趣。贵的退、便宜留 → 价格敏感但愿意尝试。<strong>她需要的是引导，不是拉黑。</strong></p>
+  </div>
+</div>
+
+<!-- 订单状态 -->
+<div class="section">
+  <h2><span class="emoji">📊</span>订单状态分布</h2>
+  <div class="bar-wrap">
+    <span class="bar-label">已完成</span>
+    <div class="bar-track"><div class="bar-fill green" style="width:48%">192单</div></div>
+    <span class="bar-num">48.2%</span>
+  </div>
+  <div class="bar-wrap">
+    <span class="bar-label">已退款</span>
+    <div class="bar-track"><div class="bar-fill red" style="width:52%">206单</div></div>
+    <span class="bar-num">51.8%</span>
+  </div>
+  <p style="margin-top:10px;font-size:13px;color:#888;">退款GMV: 14,262元 | 净保留GMV: 8,185元</p>
+</div>
+
+<!-- 月度趋势 -->
+<div class="section">
+  <h2><span class="emoji">📅</span>月度下单 & 退款趋势</h2>
+  <table>
+    <tr><th>月份</th><th>订单数</th><th>退款数</th><th>退款率</th><th>GMV(元)</th><th>评价</th></tr>
+    <tr><td>1月</td><td>185</td><td>98</td><td>53.0%</td><td>9,205</td><td><span class="badge badge-red">过高</span></td></tr>
+    <tr><td>2月</td><td>57</td><td>30</td><td>52.6%</td><td>4,713</td><td><span class="badge badge-red">过高</span></td></tr>
+    <tr><td>3月</td><td>68</td><td>32</td><td>47.1%</td><td>3,782</td><td><span class="badge badge-yellow">偏高</span></td></tr>
+    <tr><td>4月</td><td>58</td><td>33</td><td>56.9%</td><td>3,005</td><td><span class="badge badge-red">过高</span></td></tr>
+    <tr><td>5月</td><td>30</td><td>13</td><td>43.3%</td><td>1,741</td><td><span class="badge badge-yellow">偏高</span></td></tr>
+  </table>
+  <p style="margin-top:10px;font-size:13px;color:#888;">📉 下单量逐月递减（185→30），但退货率始终在43%以上</p>
+</div>
+
+<!-- 异常高频日 -->
+<div class="section">
+  <h2><span class="emoji">🚨</span>异常高频日（≥8单/天）</h2>
+  <table>
+    <tr><th>日期</th><th>下单</th><th>退款</th><th>商品种数</th><th>GMV</th><th>模式</th></tr>
+    <tr><td>1月9日</td><td><strong>13</strong></td><td><span class="badge badge-red">11</span></td><td>10</td><td>616</td><td>扫货后退85%</td></tr>
+    <tr><td>1月17日</td><td><strong>13</strong></td><td><span class="badge badge-red">11</span></td><td>10</td><td>603</td><td>扫货后退85%</td></tr>
+    <tr><td>1月28日</td><td><strong>13</strong></td><td>5</td><td>11</td><td>362</td><td>扫货后退38%</td></tr>
+    <tr><td>2月2日</td><td><strong>12</strong></td><td>3</td><td>10</td><td>282</td><td>扫货后退25%</td></tr>
+    <tr><td>1月25日</td><td><strong>10</strong></td><td><span class="badge badge-red">9</span></td><td>10</td><td>324</td><td>扫货后退90%</td></tr>
+    <tr><td>2月3日</td><td><strong>9</strong></td><td><span class="badge badge-red">8</span></td><td>6</td><td>366</td><td>扫货后退89%</td></tr>
+    <tr><td>1月30日</td><td><strong>10</strong></td><td>3</td><td>7</td><td>1,065</td><td>扫货后退30%</td></tr>
+  </table>
+  <p style="margin-top:10px;font-size:13px;color:#888;">⚡ 11天达到异常高频，最高13单/天。模式：集中下单10+种不同商品 → 退掉80-90%</p>
+</div>
+
+<!-- 退货时段 -->
+<div class="section">
+  <h2><span class="emoji">⏰</span>时段退货率分析</h2>
+  <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
+    <span style="font-size:13px;color:#888;">🟢 低退货时段：</span>
+    <span class="tag">7:00 27.7%</span>
+    <span class="tag">11:00 25.0%</span>
+    <span class="tag">14:00 30.0%</span>
+    <span class="tag">12:00 35.7%</span>
+  </div>
+  <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
+    <span style="font-size:13px;color:#888;">🔴 高退货时段：</span>
+    <span class="tag" style="background:#ffeaea;color:#e74c3c;">20:00 75.0%</span>
+    <span class="tag" style="background:#ffeaea;color:#e74c3c;">13:00 65.3%</span>
+    <span class="tag" style="background:#ffeaea;color:#e74c3c;">16:00 60.3%</span>
+    <span class="tag" style="background:#ffeaea;color:#e74c3c;">17:00 60.4%</span>
+    <span class="tag" style="background:#ffeaea;color:#e74c3c;">9:00 54.8%</span>
+    <span class="tag" style="background:#ffeaea;color:#e74c3c;">10:00 55.6%</span>
+  </div>
+  <div class="insight-box">
+    <h4>💡 早场是她最"认真"的下单时段</h4>
+    <p>7:00退货率仅27.7%，远低于全天平均51.8%。早场推荐的商品她最可能留下。下午和晚上是冲动消费高峰。</p>
+  </div>
+</div>
+
+<!-- 商品退货率TOP -->
+<div class="section">
+  <h2><span class="emoji">🛒</span>购买商品 TOP20 & 退货率</h2>
+  <table>
+    <tr><th>商品名称</th><th>购买</th><th>退款</th><th>退货率</th><th>均价</th></tr>
+    <tr><td>灵芝刺梨植萃乳</td><td>4</td><td>3</td><td><span class="badge badge-red">75.0%</span></td><td>33</td></tr>
+    <tr><td>荣业香溢腊肠</td><td>4</td><td>4</td><td><span class="badge badge-red">100%</span></td><td>20</td></tr>
+    <tr><td>范氏医用防护眼镜</td><td>4</td><td>4</td><td><span class="badge badge-red">100%</span></td><td>47</td></tr>
+    <tr><td>露露杏仁露240ML*20罐</td><td>4</td><td>1</td><td><span class="badge badge-green">25.0%</span></td><td>75</td></tr>
+    <tr><td>谷威低GI沙琪玛</td><td>3</td><td>0</td><td><span class="badge badge-green">0%</span></td><td>13</td></tr>
+    <tr><td>仙源老北京腐乳</td><td>3</td><td>3</td><td><span class="badge badge-red">100%</span></td><td>24</td></tr>
+    <tr><td>一品玉厚切苹果干</td><td>3</td><td>1</td><td><span class="badge badge-yellow">33.3%</span></td><td>13</td></tr>
+    <tr><td>正大鸡米花</td><td>3</td><td>2</td><td><span class="badge badge-red">66.7%</span></td><td>19</td></tr>
+    <tr><td>红烧狮子头</td><td>3</td><td>3</td><td><span class="badge badge-red">100%</span></td><td>29</td></tr>
+    <tr><td>VROMA精油凝胶</td><td>3</td><td>2</td><td><span class="badge badge-red">66.7%</span></td><td>45</td></tr>
+    <tr><td>潮汕墨鱼丸</td><td>3</td><td>3</td><td><span class="badge badge-red">100%</span></td><td>56</td></tr>
+    <tr><td>一品玉新疆三角奶酪</td><td>3</td><td>1</td><td><span class="badge badge-yellow">33.3%</span></td><td>16</td></tr>
+    <tr><td>稻道丰燕麦黄油蛋卷</td><td>3</td><td>2</td><td><span class="badge badge-red">66.7%</span></td><td>13</td></tr>
+    <tr><td>宝基堂灵芝酸枣仁膏</td><td>3</td><td>2</td><td><span class="badge badge-red">66.7%</span></td><td>25</td></tr>
+    <tr><td>东北慢腌酸菜500g*2袋</td><td>2</td><td>1</td><td><span class="badge badge-yellow">50.0%</span></td><td>14</td></tr>
+    <tr><td>老驴头驴肉火烧</td><td>2</td><td>1</td><td><span class="badge badge-yellow">50.0%</span></td><td>104</td></tr>
+    <tr><td>西贝蒙古酥皮牛肉馅饼</td><td>2</td><td>1</td><td><span class="badge badge-yellow">50.0%</span></td><td>55</td></tr>
+    <tr><td>自然之臻香脆麦片</td><td>2</td><td>0</td><td><span class="badge badge-green">0%</span></td><td>14</td></tr>
+    <tr><td>空心铁山楂单袋</td><td>2</td><td>1</td><td><span class="badge badge-yellow">50.0%</span></td><td>14</td></tr>
+    <tr><td>膳喆堂益生菌黑巧克力</td><td>2</td><td>1</td><td><span class="badge badge-yellow">50.0%</span></td><td>18</td></tr>
+  </table>
+  <div class="insight-box" style="margin-top:16px;">
+    <h4>💡 5款100%退货商品值得关注</h4>
+    <p>腊肠、防护眼镜、腐乳、狮子头、墨鱼丸 — 买一次退一次。可能是实物与直播展示差距大，或者是口味不适应。建议：主播提前说明口味特点，降低预期落差。</p>
+  </div>
+</div>
+
+<!-- 行动建议 -->
+<div class="section" style="background: linear-gradient(135deg, #f0f7fa 0%, #e8f0f5 100%);">
+  <h2><span class="emoji">🎯</span>行动建议</h2>
+  <table>
+    <tr><th style="width:30px">#</th><th>建议</th><th style="width:80px">优先级</th></tr>
+    <tr>
+      <td>1</td>
+      <td><strong>锁定早场推荐</strong>：她早7点退货率最低(27.7%)，新品首发优先安排在早场</td>
+      <td><span class="badge badge-red">P0</span></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>低价品为主</strong>：均价43元以下的商品她几乎不退，贵价品(>60元)退货率超65%</td>
+      <td><span class="badge badge-red">P0</span></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>给样品/小包装</strong>：她318种品类都试，可推荐试用装降低退货成本</td>
+      <td><span class="badge badge-yellow">P1</span></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>贵价品介绍加"预防针"</strong>：提前说明口味/质感，降低预期与实际落差</td>
+      <td><span class="badge badge-yellow">P1</span></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>不要拉黑</strong>：她贡献了8,185元净GMV，是活跃互动用户，有优化空间</td>
+      <td><span class="badge badge-green">P2</span></td>
+    </tr>
+  </table>
+</div>
+
+</div>
+
+<div class="footer">
+  数据来源：聚宝赞 → MySQL yunying.orders | 分析日期：2026-07-08 | 排除定金商品
+</div>
+
+</body>
+</html>
