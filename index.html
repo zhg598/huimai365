@@ -3,19 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>惠买 · 数据看板导航</title>
+<title>惠买 · 数据看板</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 <style>
+/* ===== 登录页样式 ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f0f2f5; color: #333; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f0f2f5; }
 
+.login-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 20px;
+}
+.login-card {
+  background: #fff; border-radius: 16px; padding: 48px 40px 40px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center;
+}
+.login-icon { font-size: 48px; margin-bottom: 12px; }
+.login-card h1 { font-size: 22px; color: #1a3a4a; margin-bottom: 4px; font-weight: 600; }
+.login-card .sub { font-size: 13px; color: #999; margin-bottom: 32px; }
+.login-card input[type="password"] {
+  width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px;
+  font-size: 16px; text-align: center; outline: none; transition: border 0.2s;
+}
+.login-card input[type="password"]:focus { border-color: #2d6a7e; }
+.login-card button {
+  width: 100%; padding: 12px; margin-top: 16px;
+  background: linear-gradient(135deg, #1a3a4a 0%, #2d6a7e 100%);
+  color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.login-card button:hover { opacity: 0.9; }
+.login-error { color: #e74c3c; font-size: 13px; margin-top: 12px; min-height: 20px; }
+.login-hint { font-size: 12px; color: #bbb; margin-top: 20px; }
+
+/* ===== 内容页样式（解密后使用） ===== */
 .header { background: linear-gradient(135deg, #1a3a4a 0%, #2d6a7e 100%); color: #fff; padding: 32px; text-align: center; }
 .header h1 { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
 .header .sub { font-size: 13px; opacity: 0.7; }
-
 .container { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
-
 .cards { display: flex; flex-direction: column; gap: 16px; }
-
 .card {
   display: flex; align-items: center; gap: 18px;
   background: #fff; padding: 22px 28px; border-radius: 12px;
@@ -25,95 +51,99 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
   border-left: 4px solid transparent;
 }
 .card:hover { transform: translateX(6px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); border-left-color: #2d6a7e; }
-
 .card-icon { font-size: 36px; flex-shrink: 0; width: 56px; text-align: center; }
-
 .card-content { flex: 1; }
 .card-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; color: #1a3a4a; }
 .card-desc { font-size: 13px; color: #888; }
-
 .card-arrow { font-size: 20px; color: #ccc; flex-shrink: 0; }
-
 .divider { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
 .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e0e0e0; }
 .divider span { font-size: 12px; color: #aaa; }
-
 .footer { text-align: center; padding: 24px; font-size: 12px; color: #aaa; }
 .footer a { color: #2d6a7e; text-decoration: none; }
+
+/* 退出按钮 */
+.logout-btn {
+  position: fixed; bottom: 20px; right: 20px; z-index: 999;
+  background: rgba(0,0,0,0.5); color: #fff; border: none;
+  padding: 8px 16px; border-radius: 20px; font-size: 12px;
+  cursor: pointer; transition: background 0.2s;
+}
+.logout-btn:hover { background: rgba(0,0,0,0.7); }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>📊 惠买数据看板</h1>
-  <div class="sub">银发经济私域 · 数据驱动运营</div>
-</div>
-
-<div class="container">
-  <div class="cards">
-
-    <a href="orders.html" class="card">
-      <div class="card-icon">🦪</div>
-      <div class="card-content">
-        <div class="card-title">海参订单 · 门店会员明细</div>
-        <div class="card-desc">门店消费排名、会员购买记录、可搜索展开查看详情</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a href="report.html" class="card">
-      <div class="card-icon">📈</div>
-      <div class="card-content">
-        <div class="card-title">半年总结报告看板</div>
-        <div class="card-desc">2026上半年数据总览、趋势图表、业绩分析</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a href="2026高考志愿方案_597分31800名.html" class="card">
-      <div class="card-icon">🎓</div>
-      <div class="card-content">
-        <div class="card-title">高考志愿方案</div>
-        <div class="card-desc">597分·全省31800名 · 冲稳保院校推荐</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a href="xiaguang-analysis.html" class="card">
-      <div class="card-icon">🔍</div>
-      <div class="card-content">
-        <div class="card-title">霞光 · 北宋店会员深度分析</div>
-        <div class="card-desc">398单消费行为、51.8%退货率拆解、时段商品偏好、行动建议</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a href="store-monthly-dashboard.html" class="card">
-      <div class="card-icon">🏪</div>
-      <div class="card-content">
-        <div class="card-title">白名单门店 · 月度经营看板</div>
-        <div class="card-desc">173店月度GMV、客单价、退货率、会员趋势，支持按店/督导/城市对标</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a href="store-health-dashboard.html" class="card">
-      <div class="card-icon">🩺</div>
-      <div class="card-content">
-        <div class="card-title">门店经营健康度 · 评分看板</div>
-        <div class="card-desc">6维度评分模型·173店·关店决策参考·复购/退货/集中度/趋势</div>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <div class="divider"><span>更多看板即将上线</span></div>
-
+<!-- ===== 登录界面 ===== -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-icon">🔐</div>
+    <h1>惠买数据看板</h1>
+    <p class="sub">银发经济私域 · 数据驱动运营</p>
+    <input type="password" id="pwInput" placeholder="请输入访问密码" autofocus
+           onkeydown="if(event.key==='Enter')tryLogin()">
+    <button onclick="tryLogin()">进入看板</button>
+    <div id="loginError" class="login-error"></div>
+    <p class="login-hint">如需访问权限，请联系张华刚</p>
   </div>
 </div>
 
-<div class="footer">
-  张华刚 · 区域运营 <span style="margin:0 8px">|</span> 数据更新于 2026-07-09
-</div>
+<!-- ===== 内容区域（解密后填充） ===== -->
+<div id="contentScreen" style="display:none"></div>
+<button id="logoutBtn" class="logout-btn" style="display:none" onclick="doLogout()">退出登录</button>
+
+<script>
+// ⚠️ 下面是 AES-256 加密后的页面内容。没有密码无法解密，查看源代码也只能看到这段密文。
+const ENCRYPTED = "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";
+
+// 解密并显示内容
+function tryLogin() {
+  const pw = document.getElementById('pwInput').value.trim();
+  const errEl = document.getElementById('loginError');
+  if (!pw) { errEl.textContent = '请输入密码'; return; }
+
+  try {
+    const decrypted = CryptoJS.AES.decrypt(ENCRYPTED, pw).toString(CryptoJS.enc.Utf8);
+    // 解密成功的话会得到以 <div 开头的 HTML 内容
+    if (decrypted && decrypted.indexOf('<div') === 0) {
+      // 登录成功
+      sessionStorage.setItem('huimai_auth', 'true');
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('contentScreen').style.display = 'block';
+      document.getElementById('contentScreen').innerHTML = decrypted;
+      document.getElementById('logoutBtn').style.display = 'block';
+    } else {
+      errEl.textContent = '密码错误，请重试';
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwInput').focus();
+    }
+  } catch(e) {
+    errEl.textContent = '密码错误，请重试';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+// 退出登录
+function doLogout() {
+  sessionStorage.removeItem('huimai_auth');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('contentScreen').style.display = 'none';
+  document.getElementById('contentScreen').innerHTML = '';
+  document.getElementById('logoutBtn').style.display = 'none';
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwInput').focus();
+}
+
+// 页面加载时检查是否已登录
+(function() {
+  if (sessionStorage.getItem('huimai_auth') === 'true') {
+    // 已登录，直接显示内容（但需要重新解密，所以要求再输入密码或从session取）
+    // 为安全起见，刷新页面后需要重新输入密码
+    sessionStorage.removeItem('huimai_auth');
+  }
+})();
+</script>
 
 </body>
 </html>
